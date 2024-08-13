@@ -1,34 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
+import React from 'react'
+import { useState,useEffect } from 'react'
+import BotCollection from './Components/BotCollection'
+import YourBotArmy from './Components/YourBotArmy'
+const BASEURL = "http://localhost:8001/bots"
 function App() {
-  const [count, setCount] = useState(0)
-
+  const [Bot,setBot]= useState([])
+  const[army,setArmy]=useState([])
+   function fetchBot(){
+    fetch(BASEURL)
+    .then((response)=>{
+      if(!response.ok)throw new Error("failed to perform fetch request")
+      return response.json()   
+    })
+    .then((data)=>{
+      setBot(data)
+      // console.log(data)
+    })
+    .catch((error)=>{
+      console.error(error.message)
+      
+    })
+  }
+  useEffect(()=>{
+    fetchBot()
+    // console.log(Bot)
+    console.log(army)
+  },[army])
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className='Home'>
+      <BotCollection Bot={Bot} setArmy={setArmy} army ={army}/>
+      <YourBotArmy Bot={army} setArmy={setArmy} army ={army}/>
+    </div>
+  
   )
 }
 
